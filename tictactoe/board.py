@@ -38,7 +38,7 @@ def get_winner(board):
     for a, b, c in WINNING_LINES:
         if board[a] != EMPTY and board[a] == board[b] == board[c]:
             return board[a]
-        return None
+    return None
 
 def is_draw(board):
     return get_winner(board) is None and EMPTY not in board
