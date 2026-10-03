@@ -1,5 +1,11 @@
 EMPTY = " "
 
+WINNING_LINES = (
+    (0, 1, 2), (3, 4, 5), (6, 7, 8),
+    (0, 3, 6), (1, 4, 7), (2, 5, 8),
+    (0, 4, 8), (2, 4, 6),
+)
+
 def create_board():
     return [EMPTY] * 9
 
@@ -27,3 +33,12 @@ def make_move(board, position, mark):
 
 def available_moves(board):
     return [i for i in range(9) if board[i] == EMPTY]
+
+def get_winner(board):
+    for a, b, c in WINNING_LINES:
+        if board[a] != EMPTY and board[a] == board[b] == board[c]:
+            return board[a]
+        return None
+
+def is_draw(board):
+    return get_winner(board) is None and EMPTY not in board
