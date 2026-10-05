@@ -1,3 +1,5 @@
+from tictactoe.players import random_player
+
 from tictactoe.board import (
     create_board,
     format_board,
@@ -20,7 +22,7 @@ def ask_for_move(board, mark):
             continue
         return position
 
-def play():
+def play(player_x, player_o):
     board = create_board()
     mark = "X"
     print("Squares are numbered like this:")
@@ -29,7 +31,8 @@ def play():
     while True:
         print()
         print(format_board(board))
-        position = ask_for_move(board, mark)
+        player = player_x if mark == "X" else player_o
+        position = player(board, mark)
         board = make_move(board, position, mark)
 
         if get_winner(board):
@@ -47,4 +50,8 @@ def play():
 
 
 if __name__ == "__main__":
-    play()
+    answer = input("Play against the computer? (y/n): ").strip().lower()
+    if answer == "y":
+        play(ask_for_move, random_player)
+    else:
+        play(ask_for_move, ask_for_move)
