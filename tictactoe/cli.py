@@ -1,4 +1,4 @@
-from tictactoe.players import random_player
+from tictactoe.players import minimax_player, random_player
 
 from tictactoe.board import (
     create_board,
@@ -50,8 +50,14 @@ def play(player_x, player_o):
 
 
 if __name__ == "__main__":
-    answer = input("Play against the computer? (y/n): ").strip().lower()
-    if answer == "y":
+    print("Choose an opponent:")
+    print("  1) Another human")
+    print("  2) Random computer")
+    print("  3) Unbeatable computer")
+    choice = input("Enter 1, 2, or 3: ").strip()
+    if choice == "2":
         play(ask_for_move, random_player)
+    elif choice == "3":
+        play(ask_for_move, minimax_player)
     else:
         play(ask_for_move, ask_for_move)
