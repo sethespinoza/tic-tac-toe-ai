@@ -4,9 +4,8 @@ from tictactoe.board import (
     make_move,
     get_winner,
     is_draw,
-    make_move,
 )
-from tictactoe.players import minimax_player, other, random_player
+from tictactoe.players import minimax, minimax_player, other, random_player
 
 
 def test_random_player_returns_an_available_move():
@@ -65,3 +64,39 @@ def test_minimax_never_loses_playing_first():
 
 def test_minimax_never_loses_playing_second():
     assert ai_never_loses(create_board(), "X", "O")
+
+
+def reference_player(board, mark):
+    best_move = None
+    best_score = -2
+    for move in available_moves(board):
+        child = make_move(board, move, mark)
+        score = minimax(child, other(mark), mark)
+        if score > best_score:
+            best_score = score
+            best_move = move
+    return best_move
+
+
+def collect_positions(board, turn, seen):
+    key = tuple(board)
+    if key in seen:
+        return
+    seen.add(key)
+    if get_winner(board) is not None or is_draw(board):
+        return
+    for move in available_moves(board):
+        collect_positions(make_move(board, move, turn), other(turn), seen)
+
+
+def test_alpha_beta_picks_same_moves_as_plain_minimax():
+    seen = set()
+    collect_positions(create_board(), "X", seen)
+    for key in seen:
+        board = list(key)
+        if get_winner(board) is not None or is_draw(board):
+            continue
+        if board.count(" ") > 6:
+            continue
+        turn = "X" if board.count("X") == board.count("O") else "O"
+        assert minimax_player(board, turn) == reference_player(board, turn)
